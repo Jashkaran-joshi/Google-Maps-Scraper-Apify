@@ -55,6 +55,7 @@
             "title": "Language",
             "type": "string",
             "description": "Language code for the results (e.g., 'en', 'es').",
+            "editor": "textfield",
             "default": "en"
         }
     },
