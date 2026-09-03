@@ -6,30 +6,34 @@
         "overview": {
             "title": "Overview",
             "transformation": {
-                "fields": ["title", "url", "h1s", "h2s", "h3s"]
+                "fields": ["businessName", "category", "rating", "phone", "website", "address"]
             },
             "display": {
                 "component": "table",
                 "properties": {
-                    "title": {
-                        "label": "Title",
+                    "businessName": {
+                        "label": "Business Name",
                         "format": "text"
                     },
-                    "url": {
-                        "label": "URL",
+                    "category": {
+                        "label": "Category",
+                        "format": "text"
+                    },
+                    "rating": {
+                        "label": "Rating",
+                        "format": "number"
+                    },
+                    "phone": {
+                        "label": "Phone",
+                        "format": "text"
+                    },
+                    "website": {
+                        "label": "Website",
                         "format": "link"
                     },
-                    "h1s": {
-                        "label": "H1s",
-                        "format": "array"
-                    },
-                    "h2s": {
-                        "label": "H2s",
-                        "format": "array"
-                    },
-                    "h3s": {
-                        "label": "H3s",
-                        "format": "array"
+                    "address": {
+                        "label": "Address",
+                        "format": "text"
                     }
                 }
             }

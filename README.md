@@ -1,118 +1,108 @@
-# Python Crawlee & BeautifulSoup Actor Template
+# Google Maps Business Lead Scraper
 
-<!-- This is an Apify template readme -->
+Scrape clean, structured business lead data from Google Maps quickly and reliably.
 
-This template example was built with [Crawlee for Python](https://crawlee.dev/python) to scrape data from a website using [Beautiful Soup](https://pypi.org/project/beautifulsoup4/) wrapped into [BeautifulSoupCrawler](https://crawlee.dev/python/api/class/BeautifulSoupCrawler).
+## What it does
 
-## Quick Start
+This Actor allows you to search for businesses on Google Maps by keyword and location (e.g., "dentists in Bikaner") and returns structured, actionable lead data. Instead of returning raw unstructured HTML, it normalizes and cleans the data into a stable format perfect for CRMs, sales prospecting, and market research.
 
-Once you've installed the dependencies, start the Actor:
+Under the hood, this Actor delegates the heavy lifting to Apify's robust ecosystem of Google Maps scrapers and acts as a powerful orchestrator that standardizes the schema, enforces data deduplication, and filters results based on your strict criteria (like minimum rating or requiring a website/phone number).
+
+## Features
+
+- **Keyword & Location Search**: Pass multiple queries at once.
+- **Data Normalization**: Consistently structured data regardless of source changes.
+- **Smart Deduplication**: Avoids charging or storing duplicate businesses that appear across multiple search queries.
+- **Filtering**: Filter out businesses with low ratings, or missing phone numbers and websites.
+- **Field Selection**: Choose exactly which fields you want in your final dataset to keep it clean.
+- **Safe & Reliable**: Does not rely on brittle internal endpoints or CAPTCHA bypasses.
+
+## Input
+
+Here is an example of how to configure the input:
+
+```json
+{
+  "searchQueries": [
+    "dentists in Bikaner",
+    "gyms in Jaipur"
+  ],
+  "maxResults": 100,
+  "minRating": 4.0,
+  "requireWebsite": true,
+  "requirePhone": true,
+  "deduplicate": true,
+  "language": "en"
+}
+```
+
+### Input Fields Explanation
+
+- `searchQueries` (Array): List of search phrases (e.g., "real estate agents in London").
+- `maxResults` (Integer): Total maximum number of unique results to scrape.
+- `includeFields` (Array): Optional list of fields to include in the output. If empty, all available fields are returned.
+- `minRating` (Number): Minimum acceptable star rating (0-5).
+- `requireWebsite` (Boolean): If true, skips businesses without a website.
+- `requirePhone` (Boolean): If true, skips businesses without a phone number.
+- `deduplicate` (Boolean): Removes duplicate places found across different queries.
+- `language` (String): The language code to use for scraping (default "en").
+
+## Output
+
+The Actor stores results in the Apify default dataset. 
+
+Example Output:
+
+```json
+{
+  "placeId": "ChIJb-X_L-V9QTkR75G58m9D",
+  "businessName": "Smile Dental Clinic",
+  "category": "Dentist",
+  "address": "123 Health Ave, Bikaner, Rajasthan",
+  "city": "Bikaner",
+  "state": "Rajasthan",
+  "country": "IN",
+  "postalCode": "334001",
+  "phone": "+91 98765 43210",
+  "website": "https://smiledentalbikaner.example.com",
+  "rating": 4.8,
+  "reviewCount": 142,
+  "googleMapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJb-X_L-V9QTkR75G58m9D",
+  "latitude": 28.0229,
+  "longitude": 73.3119,
+  "openingHours": {
+    "Monday": "9:00 AM - 5:00 PM"
+  },
+  "source": "google_maps",
+  "scrapedAt": "2023-11-20T14:22:15Z"
+}
+```
+*(Note: This is example data, not an actual scrape)*
+
+## Use Cases
+
+- **Lead Generation**: Compile lists of prospects matching specific criteria.
+- **Local Business Research**: Analyze competitors and average ratings in a specific region.
+- **Market Research**: Discover underserved markets based on rating data.
+- **Sales Prospecting**: Build lists of leads with phone numbers and websites for cold outreach.
+- **Local SEO Research**: Identify businesses lacking reviews or optimized profiles.
+
+## API Usage
+
+You can run this Actor programmatically via the Apify API using your Apify API Token. By using environment variables and Apify Secrets, you never need to hardcode your credentials in source code.
 
 ```bash
-apify run
+curl -X POST "https://api.apify.com/v2/acts/YOUR-ACTOR-ID/runs?token=YOUR-APIFY-TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"searchQueries":["dentists in Bikaner"], "maxResults": 10}'
 ```
 
-Once your Actor is ready, you can push it to the Apify Console:
+## Limitations
 
-```bash
-apify login # first, you need to log in if you haven't already done so
+- The availability of data like `city`, `state`, or `postalCode` strictly depends on how the business entered their address into Google Maps. Sometimes, complex addresses are not fully parsed.
+- `maxResults` is an upper limit. If Google Maps only finds 15 results for your query, the Actor will return 15 results, even if you set `maxResults` to 100.
+- Certain Google Maps fields (like detailed opening hours or deep review data) may be unavailable or limited by the upstream data source.
 
-apify push
-```
+## Responsible Use
 
-## Project Structure
-
-```text
-.actor/
-├── actor.json # Actor config: name, version, env vars, runtime settings
-├── dataset_schema.json # Structure and representation of data produced by an Actor
-├── input_schema.json # Input validation & Console form definition
-└── output_schema.json # Specifies where an Actor stores its output
-src/
-└── main.py # Actor entry point and orchestrator
-storage/ # Local storage (mirrors Cloud during development)
-├── datasets/ # Output items (JSON objects)
-├── key_value_stores/ # Files, config, INPUT
-└── request_queues/ # Pending crawl requests
-Dockerfile # Container image definition
-```
-
-For more information, see the [Actor definition](https://docs.apify.com/platform/actors/development/actor-definition) documentation.
-
-## How it works
-
-This code is a Python script that uses BeautifulSoup to scrape data from a website. It then stores the website titles in a dataset.
-
-- The crawler starts with URLs provided from the input `startUrls` field defined by the input schema. Number of scraped pages is limited by `maxPagesPerCrawl` field from the input schema.
-- The crawler uses `requestHandler` for each URL to extract the data from the page with the BeautifulSoup library and to save the title and URL of each page to the dataset. It also logs out each result that is being saved.
-
-## What's included
-
-- **[Apify SDK](https://docs.apify.com/sdk/python/)** - toolkit for building [Actors](https://apify.com/actors)
-- **[Crawlee for Python](https://crawlee.dev/python/)** - web scraping and browser automation library
-- **[Input schema](https://docs.apify.com/platform/actors/development/input-schema)** - define and easily validate a schema for your Actor's input
-- **[Dataset](https://docs.apify.com/sdk/python/docs/concepts/storages#working-with-datasets)** - store structured data where each object stored has the same attributes
-- **[Beautiful Soup](https://pypi.org/project/beautifulsoup4/)** - a library for pulling data out of HTML and XML files
-- **[Proxy configuration](https://docs.apify.com/platform/proxy)** - rotate IP addresses to prevent blocking
-
-## Resources
-
-- [Quick Start](https://docs.apify.com/platform/actors/development/quick-start) guide for building your first Actor
-- [Video introduction to Python SDK](https://www.youtube.com/watch?v=C8DmvJQS3jk)
-- [Webinar introducing to Crawlee for Python](https://www.youtube.com/live/ip8Ii0eLfRY)
-- [Apify Python SDK documentation](https://docs.apify.com/sdk/python/)
-- [Crawlee for Python documentation](https://crawlee.dev/python/docs/quick-start)
-- [Python tutorials in Academy](https://docs.apify.com/academy/python)
-- [Integration with Zapier](https://apify.com/integrations), Make, Google Drive and others
-- [Video guide on getting data using Apify API](https://www.youtube.com/watch?v=ViYYDHSBAKM)
-
-## Creating Actors with templates
-
-[How to create Apify Actors with web scraping code templates](https://www.youtube.com/watch?v=u-i-Korzf8w)
-
-
-## Getting started
-
-For complete information [see this article](https://docs.apify.com/platform/actors/development#build-actor-at-apify-console). In short, you will:
-
-1. Build the Actor
-2. Run the Actor
-
-## Pull the Actor for local development
-
-If you would like to develop locally, you can pull the existing Actor from Apify console using Apify CLI:
-
-1. Install `apify-cli`
-
-    **Using Homebrew**
-
-    ```bash
-    brew install apify-cli
-    ```
-
-    **Using NPM**
-
-    ```bash
-    npm -g install apify-cli
-    ```
-
-2. Pull the Actor by its unique `<ActorId>`, which is one of the following:
-    - unique name of the Actor to pull (e.g. "apify/hello-world")
-    - or ID of the Actor to pull (e.g. "E2jjCZBezvAZnX8Rb")
-
-    You can find both by clicking on the Actor title at the top of the page, which will open a modal containing both Actor unique name and Actor ID.
-
-    This command will copy the Actor into the current directory on your local machine.
-
-    ```bash
-    apify pull <ActorId>
-    ```
-
-## Documentation reference
-
-To learn more about Apify and Actors, take a look at the following resources:
-
-- [Apify SDK for JavaScript documentation](https://docs.apify.com/sdk/js)
-- [Apify SDK for Python documentation](https://docs.apify.com/sdk/python)
-- [Apify Platform documentation](https://docs.apify.com/platform)
-- [Join our developer community on Discord](https://discord.com/invite/jyEM2PRvMU)
+Users are responsible for complying with applicable laws, website terms of service, privacy requirements (such as GDPR or CCPA regarding personal data like phone numbers or emails), and data-protection obligations. This Actor facilitates access to public data and does not promise unrestricted access to Google Maps. Always respect limits and use scraped data ethically.

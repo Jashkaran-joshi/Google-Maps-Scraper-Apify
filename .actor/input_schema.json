@@ -1,20 +1,62 @@
 {
     "$schema": "https://apify.com/schemas/v1/input.ide.json",
-    "title": "Python Crawlee BeautifulSoup Scraper",
+    "title": "Google Maps Business Lead Scraper Input",
     "type": "object",
     "schemaVersion": 1,
     "properties": {
-        "start_urls": {
-            "title": "Start URLs",
+        "searchQueries": {
+            "title": "Search Queries",
             "type": "array",
-            "description": "URLs to start with",
-            "prefill": [
-                {
-                    "url": "https://apify.com"
-                }
-            ],
-            "editor": "requestListSources"
+            "description": "List of keywords and locations to search for.",
+            "editor": "stringList",
+            "prefill": ["dentists in Bikaner"]
+        },
+        "maxResults": {
+            "title": "Max Results",
+            "type": "integer",
+            "description": "Maximum number of results to return.",
+            "default": 50,
+            "minimum": 1
+        },
+        "includeFields": {
+            "title": "Include Fields",
+            "type": "array",
+            "description": "Optional list of fields to include in the output. If empty, all available fields are returned.",
+            "editor": "stringList",
+            "default": []
+        },
+        "minRating": {
+            "title": "Minimum Rating",
+            "type": "number",
+            "description": "Only return businesses with at least this rating (0-5).",
+            "default": 0,
+            "minimum": 0,
+            "maximum": 5
+        },
+        "requireWebsite": {
+            "title": "Require Website",
+            "type": "boolean",
+            "description": "Only return businesses that have a website.",
+            "default": false
+        },
+        "requirePhone": {
+            "title": "Require Phone",
+            "type": "boolean",
+            "description": "Only return businesses that have a phone number.",
+            "default": false
+        },
+        "deduplicate": {
+            "title": "Deduplicate Results",
+            "type": "boolean",
+            "description": "Remove duplicate businesses from the final results.",
+            "default": true
+        },
+        "language": {
+            "title": "Language",
+            "type": "string",
+            "description": "Language code for the results (e.g., 'en', 'es').",
+            "default": "en"
         }
     },
-    "required": ["start_urls"]
+    "required": ["searchQueries"]
 }
