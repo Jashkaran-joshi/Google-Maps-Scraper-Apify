@@ -36,7 +36,14 @@ async def main() -> None:
 
         # 1. Fetch raw data using source client
         try:
-            raw_items = await fetch_source_data(search_queries, max_results, language)
+            raw_items = await fetch_source_data(
+                search_queries, 
+                max_results, 
+                language,
+                min_rating,
+                require_website,
+                require_phone
+            )
         except Exception as e:
             Actor.log.error(f"Failed to fetch source data: {e}")
             await Actor.fail(status_message="Source data fetching failed.")

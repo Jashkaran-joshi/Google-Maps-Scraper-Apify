@@ -5,7 +5,10 @@ from typing import Any, Dict, List
 async def fetch_source_data(
     queries: List[str], 
     max_results: int, 
-    language: str
+    language: str,
+    min_rating: float = 0,
+    require_website: bool = False,
+    require_phone: bool = False
 ) -> List[Dict[str, Any]]:
     """
     Calls an external reliable Google Maps Apify Actor to fetch the raw business data.
@@ -14,14 +17,28 @@ async def fetch_source_data(
     
     Actor.log.info(f"Calling source Actor: {source_actor_id} with {len(queries)} queries.")
     
+    # Calculate a reasonable upstream limit to ensure we have enough after filtering
+    multiplier = 1.0
+    if min_rating > 4.0: multiplier *= 2.5
+    elif min_rating > 0: multiplier *= 1.5
+    if require_website: multiplier *= 1.5
+    if require_phone: multiplier *= 1.2
+    
+    upstream_max = int(max_results * multiplier)
+    
+    # Put a hard ceiling to prevent massive accidental API charges
+    if upstream_max > max_results * 5:
+        upstream_max = max_results * 5
+        
+    if upstream_max != max_results:
+        Actor.log.info(f"Filters applied. Requesting up to {upstream_max} records upstream to return {max_results} matching ones.")
+    
     # Prepare input for standard Google Maps scrapers on Apify
-    # Providing both searchStringsArray and searchQueries ensures compatibility
-    # with multiple standard implementations.
     run_input = {
         "searchStringsArray": queries,
         "searchQueries": queries, 
-        "maxCrawledPlacesPerSearch": max_results,
-        "maxResults": max_results,
+        "maxCrawledPlacesPerSearch": upstream_max,
+        "maxResults": upstream_max,
         "language": language,
     }
     
