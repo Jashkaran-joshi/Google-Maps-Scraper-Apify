@@ -47,11 +47,18 @@ async def fetch_source_data(
     try:
         run = await apify_client.actor(source_actor_id).call(run_input=run_input)
         
-        if run is None or run.get('status') != 'SUCCEEDED':
-            Actor.log.error(f"Source Actor run failed or was aborted: {run}")
-            raise Exception("Source Actor failed to complete successfully.")
+        if run is None:
+            raise Exception("Source Actor run is None.")
             
-        default_dataset_id = run['defaultDatasetId']
+        status = getattr(run, 'status', None) or (run.get('status') if isinstance(run, dict) else None)
+        if status != 'SUCCEEDED':
+            Actor.log.error(f"Source Actor run failed or was aborted: {run}")
+            raise Exception(f"Source Actor failed to complete successfully. Status: {status}")
+            
+        default_dataset_id = getattr(run, 'default_dataset_id', None) or (run.get('defaultDatasetId') if isinstance(run, dict) else None)
+        
+        if not default_dataset_id:
+            raise Exception("Could not find default_dataset_id on the run object.")
         
         # Fetch the results from the source dataset
         dataset_items = await apify_client.dataset(default_dataset_id).list_items()
