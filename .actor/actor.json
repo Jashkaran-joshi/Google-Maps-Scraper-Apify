@@ -8,7 +8,7 @@
     "buildTag": "latest",
     "meta": {
         "templateId": "python-crawlee-beautifulsoup",
-        "generatedBy": "Claude Code with Gemini 3.1 Pro (High)"
+        "generatedBy": "Antigravity with Gemini 3.1 Pro (High)"
     },
     "inputSchema": "./input_schema.json",
     "outputSchema": "./output_schema.json",
