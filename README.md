@@ -4,7 +4,7 @@ Scrape clean, structured business lead data from Google Maps quickly and reliabl
 
 ## What it does
 
-This Actor allows you to search for businesses on Google Maps by keyword and location (e.g., "dentists in Bikaner") and returns structured, actionable lead data. Instead of returning raw unstructured HTML, it normalizes and cleans the data into a stable format perfect for CRMs, sales prospecting, and market research.
+This Actor allows you to search for businesses on Google Maps by keyword and location (e.g., "dentists in Delhi") and returns structured, actionable lead data. Instead of returning raw unstructured HTML, it normalizes and cleans the data into a stable format perfect for CRMs, sales prospecting, and market research.
 
 Under the hood, this Actor delegates the heavy lifting to Apify's robust ecosystem of Google Maps scrapers and acts as a powerful orchestrator that standardizes the schema, enforces data deduplication, and filters results based on your strict criteria (like minimum rating or requiring a website/phone number).
 
@@ -24,7 +24,7 @@ Here is an example of how to configure the input:
 ```json
 {
   "searchQueries": [
-    "dentists in Bikaner",
+    "dentists in Delhi",
     "gyms in Jaipur"
   ],
   "maxResults": 100,
