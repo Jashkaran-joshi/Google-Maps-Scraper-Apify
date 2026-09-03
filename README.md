@@ -58,18 +58,18 @@ Example Output:
   "placeId": "ChIJb-X_L-V9QTkR75G58m9D",
   "businessName": "Smile Dental Clinic",
   "category": "Dentist",
-  "address": "123 Health Ave, Bikaner, Rajasthan",
-  "city": "Bikaner",
-  "state": "Rajasthan",
+  "address": "123 Health Ave, New Delhi, Delhi",
+  "city": "New Delhi",
+  "state": "Delhi",
   "country": "IN",
-  "postalCode": "334001",
+  "postalCode": "110001",
   "phone": "+91 98765 43210",
-  "website": "https://smiledentalbikaner.example.com",
+  "website": "https://smiledentaldelhi.example.com",
   "rating": 4.8,
   "reviewCount": 142,
   "googleMapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJb-X_L-V9QTkR75G58m9D",
-  "latitude": 28.0229,
-  "longitude": 73.3119,
+  "latitude": 28.6139,
+  "longitude": 77.2090,
   "openingHours": {
     "Monday": "9:00 AM - 5:00 PM"
   },
@@ -94,7 +94,7 @@ You can run this Actor programmatically via the Apify API using your Apify API T
 ```bash
 curl -X POST "https://api.apify.com/v2/acts/YOUR-ACTOR-ID/runs?token=YOUR-APIFY-TOKEN" \
   -H "Content-Type: application/json" \
-  -d '{"searchQueries":["dentists in Bikaner"], "maxResults": 10}'
+  -d '{"searchQueries":["dentists in Delhi"], "maxResults": 10}'
 ```
 
 ## Limitations

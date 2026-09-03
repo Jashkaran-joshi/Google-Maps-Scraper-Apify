@@ -9,7 +9,7 @@
             "type": "array",
             "description": "List of keywords and locations to search for.",
             "editor": "stringList",
-            "prefill": ["dentists in Bikaner"]
+            "prefill": ["dentists in Delhi"]
         },
         "maxResults": {
             "title": "Max Results",
